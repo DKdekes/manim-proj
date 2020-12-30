@@ -16,9 +16,37 @@ class CircleArea(Scene):
         self.circle.scale(2)
         self.circle.shift(self.circle_shift)
         self.play(ShowCreation(self.circle))
-        tangle_angles = self.create_circles(10)
 
-    def create_circles(self, num_sections):
+        # simple
+        rectangle_sections = self.create_sections(8)
+        self.add_tangle_brace(rectangle_sections)
+        self.wait(3)
+        self.clear()
+
+        # moderate
+        rectangle_sections = self.create_sections(12)
+        self.add_tangle_brace(rectangle_sections)
+        self.wait(3)
+        self.clear()
+
+        # full circle
+        rectangle_sections = self.create_sections(30)
+        self.add_tangle_brace(rectangle_sections)
+        self.wait(3)
+
+    def add_tangle_brace(self, tangle_triangles):
+        brace_line = Line(tangle_triangles[0].get_vertices()[0], tangle_triangles[-1].get_vertices()[2])
+        tangle_brace = Brace(brace_line).shift(UP)
+        tangle_brace.flip(LEFT)
+        brace_tex = tangle_brace.get_tex("1/2 C")
+        self.play(ShowCreation(tangle_brace))
+        self.add(tangle_brace, brace_tex)
+
+    def remove_sections(self, sections):
+        for section in sections:
+            self.remove(section)
+
+    def create_sections(self, num_sections):
         tangle_angles = []
         step_size = 2 * math.pi / num_sections
         radius = self.circle.get_width() / 2
@@ -30,7 +58,7 @@ class CircleArea(Scene):
         print(circle_origin.points)
 
         for i in range(num_sections):
-            triangle = Triangle()
+            triangle = Triangle(fill_opacity=1)
             triangle.stretch_to_fit_height(radius)
             triangle.stretch_to_fit_width(width)
             if i % 2 == 0:
@@ -40,28 +68,23 @@ class CircleArea(Scene):
                 triangle.set_fill(BLUE)
             tangle_triangle = triangle.copy()
 
-            # for circle
+            # for the circle
             triangle.shift(self.circle_shift)
             triangle.align_to(circle_origin, direction=UP)
             triangle.rotate(i * step_size, about_point=circle_origin.points[0])
             self.play(ShowCreation(triangle), run_time=self.anim_time)
 
-            # for the tangle
+            # for the rectangle
             tangle_triangle.shift(self.tangle_shift)
             tangle_triangle.shift(0.5 * width * RIGHT * i)
             if i % 2 != 0:
                 tangle_triangle.flip(LEFT)
+                tangle_triangle.shift(UP * 0.2)
             self.play(ShowCreation(tangle_triangle), run_time=self.anim_time)
             tangle_angles.append(tangle_triangle)
             print(tangle_triangle.get_vertices())
             # self.play(ApplyMethod(triangle.rotate, i * step_size, about_point=self.origin.points[0]))
-        brace_line = Line(tangle_angles[0].get_vertices()[0], tangle_angles[-1].get_vertices()[2])
-        tangle_brace = Brace(brace_line).shift(UP)
-        tangle_brace.flip(LEFT)
-        brace_tex = tangle_brace.get_tex("1/2 C")
-        self.play(ShowCreation(tangle_brace))
-        self.add(tangle_brace, brace_tex)
-        self.wait(3)
+        return tangle_angles
 
     def anim(self, function, *args, **kwargs):
         if fast_run:
