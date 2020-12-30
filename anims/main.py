@@ -11,7 +11,8 @@ class CircleArea(Scene):
     def construct(self):
         self.circle_shift = 1 * UP + 3.5 * LEFT
         self.tangle_shift = 2 * DOWN
-        self.anim_time = 0.2
+        self.anim_time = 0.1
+        self.opacity = 0.9
         self.circle = Circle()
         self.circle.scale(2)
         self.circle.shift(self.circle_shift)
@@ -23,22 +24,27 @@ class CircleArea(Scene):
         self.wait(3)
         self.clear()
 
-        # moderate
-        rectangle_sections = self.create_sections(12)
-        self.add_tangle_brace(rectangle_sections)
-        self.wait(3)
-        self.clear()
+        # # moderate
+        # rectangle_sections = self.create_sections(12)
+        # self.add_tangle_brace(rectangle_sections)
+        # self.wait(3)
+        # self.clear()
+        #
+        # # full circle
+        # rectangle_sections = self.create_sections(30)
+        # self.add_tangle_brace(rectangle_sections)
+        # self.wait(3)
 
-        # full circle
-        rectangle_sections = self.create_sections(30)
-        self.add_tangle_brace(rectangle_sections)
-        self.wait(3)
+    def add_final_equation(self):
+        pass
 
     def add_tangle_brace(self, tangle_triangles):
         brace_line = Line(tangle_triangles[0].get_vertices()[0], tangle_triangles[-1].get_vertices()[2])
         tangle_brace = Brace(brace_line).shift(UP)
         tangle_brace.flip(LEFT)
+        # todo: actual math. add = pi*r
         brace_tex = tangle_brace.get_tex("1/2 C")
+        # todo: add vertical bracket
         self.play(ShowCreation(tangle_brace))
         self.add(tangle_brace, brace_tex)
 
@@ -58,14 +64,17 @@ class CircleArea(Scene):
         print(circle_origin.points)
 
         for i in range(num_sections):
-            triangle = Triangle(fill_opacity=1)
+            # todo: add outline
+            triangle = Triangle(fill_opacity=self.opacity)
             triangle.stretch_to_fit_height(radius)
             triangle.stretch_to_fit_width(width)
             if i % 2 == 0:
                 triangle.set_color(YELLOW)
                 triangle.set_fill(YELLOW)
+                triangle.set_stroke(WHITE)
             else:
                 triangle.set_fill(BLUE)
+                triangle.set_stroke(WHITE)
             tangle_triangle = triangle.copy()
 
             # for the circle
