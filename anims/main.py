@@ -11,7 +11,7 @@ class CircleArea(Scene):
     def construct(self):
         self.circle_shift = 1 * UP + 3.5 * LEFT
         self.tangle_shift = 2 * DOWN
-        self.anim_time = 0.1
+        self.anim_time = 0.2
         self.circle = Circle()
         self.circle.scale(2)
         self.circle.shift(self.circle_shift)
@@ -71,7 +71,8 @@ class CircleArea(Scene):
             # for the circle
             triangle.shift(self.circle_shift)
             triangle.align_to(circle_origin, direction=UP)
-            triangle.rotate(i * step_size, about_point=circle_origin.points[0])
+            triangle.rotate(i // 2 * step_size if i % 2 == 0 else (i // 2 + 1) * -step_size, about_point=circle_origin.points[0])
+
             self.play(ShowCreation(triangle), run_time=self.anim_time)
 
             # for the rectangle
