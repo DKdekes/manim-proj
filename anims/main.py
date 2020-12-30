@@ -58,8 +58,9 @@ class CircleArea(Scene):
         brace_line = Line(tangle_angles[0].get_vertices()[0], tangle_angles[-1].get_vertices()[2])
         tangle_brace = Brace(brace_line).shift(UP)
         tangle_brace.flip(LEFT)
+        brace_tex = tangle_brace.get_tex("1/2 C")
         self.play(ShowCreation(tangle_brace))
-        self.add(tangle_brace)
+        self.add(tangle_brace, brace_tex)
         self.wait(3)
 
     def anim(self, function, *args, **kwargs):
