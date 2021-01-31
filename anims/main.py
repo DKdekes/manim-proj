@@ -36,7 +36,7 @@ class CircleArea(Scene):
         self.circle.scale(2)
         self.circle.shift(self.circle_shift)
         self.play(ShowCreation(self.circle))
-        self.wait(2)
+        self.wait(1)
         rectangle_sections = self.create_sections(num_sections)
         self.add_hori_tangle_brace(rectangle_sections)
         self.add_vert_tangle_brace(rectangle_sections)
